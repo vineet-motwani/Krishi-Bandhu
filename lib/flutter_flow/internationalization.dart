@@ -194,42 +194,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Our Services...',
       'hi': '',
     },
-    'iwb2uj4e': {
-      'en': 'Homes',
-      'hi': '',
-    },
-    '0d7aav6e': {
-      'en': 'Maidstone, San Antonio, Tx.',
-      'hi': '',
-    },
-    '07pf5rji': {
-      'en': '\$210/night',
-      'hi': '',
-    },
-    '1wivkmks': {
-      'en': '32 miles away',
-      'hi': '',
-    },
-    'ng7mtx71': {
-      'en': '4.25',
-      'hi': '',
-    },
-    '69g1jg4a': {
-      'en': 'Maidstone, San Antonio, Tx.',
-      'hi': '',
-    },
-    'nbk63tp2': {
-      'en': '\$210/night',
-      'hi': '',
-    },
-    'gvq1fae7': {
-      'en': '32 miles away',
-      'hi': '',
-    },
-    'c10yaw6u': {
-      'en': '4.25',
-      'hi': '',
-    },
     '40tb3dwk': {
       'en': 'Home',
       'hi': '',

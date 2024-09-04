@@ -10,10 +10,6 @@ class ServicesPageModel extends FlutterFlowModel<ServicesPageWidget> {
   FocusNode? textFieldFocusNode;
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  // State field(s) for TabBar widget.
-  TabController? tabBarController;
-  int get tabBarCurrentIndex =>
-      tabBarController != null ? tabBarController!.index : 0;
 
   @override
   void initState(BuildContext context) {}
@@ -22,7 +18,5 @@ class ServicesPageModel extends FlutterFlowModel<ServicesPageWidget> {
   void dispose() {
     textFieldFocusNode?.dispose();
     textController?.dispose();
-
-    tabBarController?.dispose();
   }
 }
