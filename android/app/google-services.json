@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "632209478887",
+    "project_id": "krishi-bandhu-bbee2",
+    "storage_bucket": "krishi-bandhu-bbee2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632209478887:android:80050c3f21771478913e42",
+        "android_client_info": {
+          "package_name": "com.agritech.krishibandhu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJHNPz9iTz52VEi0_jnbzrLUgOPfETuDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
