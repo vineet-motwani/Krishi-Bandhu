@@ -34,7 +34,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
     _model.descriptionTextController ??= TextEditingController();
     _model.descriptionFocusNode ??= FocusNode();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -139,7 +139,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                       selectedMedia.every((m) =>
                                           validateFileFormat(
                                               m.storagePath, context))) {
-                                    setState(
+                                    safeSetState(
                                         () => _model.isDataUploading = true);
                                     var selectedUploadedFiles =
                                         <FFUploadedFile>[];
@@ -174,14 +174,14 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                             selectedMedia.length &&
                                         downloadUrls.length ==
                                             selectedMedia.length) {
-                                      setState(() {
+                                      safeSetState(() {
                                         _model.uploadedLocalFile =
                                             selectedUploadedFiles.first;
                                         _model.uploadedFileUrl =
                                             downloadUrls.first;
                                       });
                                     } else {
-                                      setState(() {});
+                                      safeSetState(() {});
                                       return;
                                     }
                                   }

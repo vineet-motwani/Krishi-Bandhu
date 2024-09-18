@@ -33,7 +33,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
       vsync: this,
       length: 2,
       initialIndex: 0,
-    )..addListener(() => setState(() {}));
+    )..addListener(() => safeSetState(() {}));
     _model.emailAddressCreateTextController ??= TextEditingController();
     _model.emailAddressCreateFocusNode ??= FocusNode();
 
@@ -116,7 +116,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
       ),
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -548,7 +548,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                                                   24.0),
                                                           suffixIcon: InkWell(
                                                             onTap: () =>
-                                                                setState(
+                                                                safeSetState(
                                                               () => _model
                                                                       .passwordCreateVisibility =
                                                                   !_model
@@ -1138,7 +1138,7 @@ class _AuthPageWidgetState extends State<AuthPageWidget>
                                                                       24.0),
                                                           suffixIcon: InkWell(
                                                             onTap: () =>
-                                                                setState(
+                                                                safeSetState(
                                                               () => _model
                                                                       .passwordVisibility =
                                                                   !_model

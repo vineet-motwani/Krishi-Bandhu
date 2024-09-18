@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
 export 'package:go_router/go_router.dart';
@@ -100,6 +99,31 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'EditProfilePage',
           path: '/editProfilePage',
           builder: (context, params) => const EditProfilePageWidget(),
+        ),
+        FFRoute(
+          name: 'CropPrediction',
+          path: '/cropPrediction',
+          builder: (context, params) => const CropPredictionWidget(),
+        ),
+        FFRoute(
+          name: 'SoilPrediction',
+          path: '/soilPrediction',
+          builder: (context, params) => const SoilPredictionWidget(),
+        ),
+        FFRoute(
+          name: 'PestPrediction',
+          path: '/pestPrediction',
+          builder: (context, params) => const PestPredictionWidget(),
+        ),
+        FFRoute(
+          name: 'WeatherForecasting',
+          path: '/weatherForecasting',
+          builder: (context, params) => const WeatherForecastingWidget(),
+        ),
+        FFRoute(
+          name: 'WeedIdentification',
+          path: '/weedIdentification',
+          builder: (context, params) => const WeedIdentificationWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -284,15 +308,11 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
+              ? Container(
+                  color: Colors.transparent,
+                  child: Image.asset(
+                    'assets/images/Splash.jpg',
+                    fit: BoxFit.cover,
                   ),
                 )
               : page;
