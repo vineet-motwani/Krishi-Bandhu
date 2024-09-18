@@ -161,7 +161,7 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.asset(
-                            'assets/images/bg_color.png',
+                            'assets/images/preview.png',
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,
