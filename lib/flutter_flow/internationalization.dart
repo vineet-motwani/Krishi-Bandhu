@@ -190,10 +190,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // ServicesPage
   {
-    '1w0kg4om': {
-      'en': 'Our Services...',
-      'hi': '',
-    },
     'f377rwjq': {
       'en': 'Crop Prediction',
       'hi': '',
