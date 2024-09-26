@@ -292,10 +292,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
           'ML models can analyze data from sensors and soil samples to assess soil health and predict nutrient needs. \nRegression models and decision trees are often used to recommend appropriate fertilizers and soil amendments.',
       'hi': '',
     },
-    'w9ahvzkx': {
-      'en': 'Hello World',
-      'hi': '',
-    },
     'gp4jjfuj': {
       'en': 'Home',
       'hi': '',

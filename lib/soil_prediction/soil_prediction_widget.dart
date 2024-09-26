@@ -1,3 +1,4 @@
+import '/backend/api_requests/api_calls.dart';
 import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -138,6 +139,23 @@ class _SoilPredictionWidgetState extends State<SoilPredictionWidget> {
                         return;
                       }
                     }
+
+                    _model.apiResultx6p = await HuggingAPICall.call(
+                      prompt:
+                          'Assess this image and identify the type of soil. Identify the health of the soil and also suggest remedies for it, if any.',
+                    );
+
+                    if ((_model.apiResultx6p?.succeeded ?? true)) {
+                      _model.apiResponse = valueOrDefault<String>(
+                        HuggingAPICall.textResponse(
+                          (_model.apiResultx6p?.jsonBody ?? ''),
+                        ),
+                        'Soil Type could not be identified.',
+                      );
+                      safeSetState(() {});
+                    }
+
+                    safeSetState(() {});
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
@@ -185,9 +203,7 @@ class _SoilPredictionWidgetState extends State<SoilPredictionWidget> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                 child: Text(
-                  FFLocalizations.of(context).getText(
-                    'w9ahvzkx' /* Hello World */,
-                  ),
+                  _model.apiResponse,
                   style: FlutterFlowTheme.of(context).bodyLarge.override(
                         fontFamily: 'Montserrat',
                         letterSpacing: 0.0,
