@@ -1,4 +1,4 @@
-import '/backend/firebase_storage/storage.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/upload_data.dart';
@@ -94,13 +94,7 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                       safeSetState(() => _model.isDataUploading = true);
                       var selectedUploadedFiles = <FFUploadedFile>[];
 
-                      var downloadUrls = <String>[];
                       try {
-                        showUploadMessage(
-                          context,
-                          'Uploading file...',
-                          showLoading: true,
-                        );
                         selectedUploadedFiles = selectedMedia
                             .map((m) => FFUploadedFile(
                                   name: m.storagePath.split('/').last,
@@ -110,35 +104,37 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                                   blurHash: m.blurHash,
                                 ))
                             .toList();
-
-                        downloadUrls = (await Future.wait(
-                          selectedMedia.map(
-                            (m) async =>
-                                await uploadData(m.storagePath, m.bytes),
-                          ),
-                        ))
-                            .where((u) => u != null)
-                            .map((u) => u!)
-                            .toList();
                       } finally {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         _model.isDataUploading = false;
                       }
                       if (selectedUploadedFiles.length ==
-                              selectedMedia.length &&
-                          downloadUrls.length == selectedMedia.length) {
+                          selectedMedia.length) {
                         safeSetState(() {
                           _model.uploadedLocalFile =
                               selectedUploadedFiles.first;
-                          _model.uploadedFileUrl = downloadUrls.first;
                         });
-                        showUploadMessage(context, 'Success!');
                       } else {
                         safeSetState(() {});
-                        showUploadMessage(context, 'Failed to upload data');
                         return;
                       }
                     }
+
+                    _model.apiResult9w4 = await HuggingAPICall.call(
+                      prompt:
+                          'Identify if there is any weed in the crop image. If there is weed, suggest remedies for it.',
+                    );
+
+                    if ((_model.apiResult9w4?.succeeded ?? true)) {
+                      _model.apiResponse = valueOrDefault<String>(
+                        HuggingAPICall.textResponse(
+                          (_model.apiResult9w4?.jsonBody ?? ''),
+                        ),
+                        '✨ Upload your image ✨',
+                      );
+                      safeSetState(() {});
+                    }
+
+                    safeSetState(() {});
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
@@ -155,7 +151,7 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
                 child: Builder(
                   builder: (context) {
-                    if (_model.uploadedFileUrl == '') {
+                    if ((_model.uploadedLocalFile.bytes?.isEmpty ?? true)) {
                       return Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
@@ -172,8 +168,9 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                     } else {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          _model.uploadedFileUrl,
+                        child: Image.memory(
+                          _model.uploadedLocalFile.bytes ??
+                              Uint8List.fromList([]),
                           width: 200.0,
                           height: 200.0,
                           fit: BoxFit.cover,
@@ -184,13 +181,15 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(15.0, 20.0, 15.0, 0.0),
                 child: Text(
-                  FFLocalizations.of(context).getText(
-                    'iu860b7k' /* Hello World */,
+                  valueOrDefault<String>(
+                    _model.apiResponse,
+                    '✨ Upload your image ✨',
                   ),
                   style: FlutterFlowTheme.of(context).bodyLarge.override(
                         fontFamily: 'Montserrat',
+                        color: FlutterFlowTheme.of(context).primaryText,
                         letterSpacing: 0.0,
                       ),
                 ),

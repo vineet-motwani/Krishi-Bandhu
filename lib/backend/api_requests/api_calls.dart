@@ -52,6 +52,30 @@ class HuggingAPICall {
       ));
 }
 
+class UploadImageCall {
+  static Future<ApiCallResponse> call({
+    String? apiKey = 'AIzaSyAbRDWWhhkYfOn3wN0qPjB0c51Notvrf8w',
+  }) async {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Upload Image',
+      apiUrl:
+          'https://generativelanguage.googleapis.com/upload/v1beta/files?uploadType=media&key=API_KEY',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'image/jpeg',
+      },
+      params: {},
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;

@@ -191,19 +191,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // ServicesPage
   {
     'f377rwjq': {
-      'en': 'Crop Prediction',
+      'en': 'Yield Prediction',
       'hi': '',
     },
     '9oyu7o89': {
-      'en': 'Pest and Disease Detection',
+      'en': 'Plant Disease Detection',
       'hi': '',
     },
     '2hr7r835': {
       'en': 'Soil Quality Assessment',
-      'hi': '',
-    },
-    've69j5fi': {
-      'en': 'Weather Forecasting',
       'hi': '',
     },
     'hq2o89uk': {
@@ -211,7 +207,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'hi': '',
     },
     '40tb3dwk': {
-      'en': 'Home',
+      'en': 'Services',
       'hi': '',
     },
   },
@@ -272,10 +268,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
           'Here, we analyze historical weather data, soil conditions, and crop performance to predict the yield of different crops. \n\nFor example, convolutional neural networks (CNNs) can be used to analyze satellite images and predict crop health and yield.',
       'hi': '',
     },
-    'a29y86tq': {
-      'en': 'Hello World',
-      'hi': 'हैलो वर्ल्ड',
-    },
     '2uaeivee': {
       'en': 'Home',
       'hi': '',
@@ -297,19 +289,15 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'hi': '',
     },
   },
-  // PestPrediction
+  // PlantDiseaseDetection
   {
     'mxhr60ci': {
-      'en': 'Pest Detection',
+      'en': 'Disease Detection',
       'hi': '',
     },
     '2569s6te': {
       'en':
-          'ML models, especially those using image recognition techniques, can identify pests and diseases from images of plants. \nModels like CNNs and transfer learning methods help in detecting early signs of infestations or infections, allowing for timely intervention.',
-      'hi': '',
-    },
-    '7bn6uor0': {
-      'en': 'Hello World',
+          'ML models, especially those using image recognition techniques, can identify diseases from images of plants. \nModels like CNNs and transfer learning methods help in detecting early signs of infestations or infections, allowing for timely intervention.',
       'hi': '',
     },
     'l81u9ehv': {
@@ -323,13 +311,8 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'en': 'Weather Forecast',
       'hi': '',
     },
-    '1vx4foic': {
-      'en':
-          'Machine learning can enhance weather predictions by analyzing vast amounts of historical and real-time meteorological data. \n\nBetter weather forecasts help farmers plan planting and harvesting schedules more effectively.',
-      'hi': '',
-    },
     '5v4c1x4d': {
-      'en': 'Home',
+      'en': 'Weather',
       'hi': '',
     },
   },
@@ -342,10 +325,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
     'hc2pxsms': {
       'en':
           'We can distinguish between crops and weeds using image data, allowing for targeted weed control. \n\nThis reduces the need for broad-spectrum herbicides and minimizes environmental impact.',
-      'hi': '',
-    },
-    'iu860b7k': {
-      'en': 'Hello World',
       'hi': '',
     },
     'ec5lu5si': {

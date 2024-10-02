@@ -1,27 +1,29 @@
-import '/backend/firebase_storage/storage.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/upload_data.dart';
 import 'package:flutter/material.dart';
-import 'pest_prediction_model.dart';
-export 'pest_prediction_model.dart';
+import 'plant_disease_detection_model.dart';
+export 'plant_disease_detection_model.dart';
 
-class PestPredictionWidget extends StatefulWidget {
-  const PestPredictionWidget({super.key});
+class PlantDiseaseDetectionWidget extends StatefulWidget {
+  const PlantDiseaseDetectionWidget({super.key});
 
   @override
-  State<PestPredictionWidget> createState() => _PestPredictionWidgetState();
+  State<PlantDiseaseDetectionWidget> createState() =>
+      _PlantDiseaseDetectionWidgetState();
 }
 
-class _PestPredictionWidgetState extends State<PestPredictionWidget> {
-  late PestPredictionModel _model;
+class _PlantDiseaseDetectionWidgetState
+    extends State<PlantDiseaseDetectionWidget> {
+  late PlantDiseaseDetectionModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PestPredictionModel());
+    _model = createModel(context, () => PlantDiseaseDetectionModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -45,7 +47,7 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
           automaticallyImplyLeading: false,
           title: Text(
             FFLocalizations.of(context).getText(
-              'mxhr60ci' /* Pest Detection */,
+              'mxhr60ci' /* Disease Detection */,
             ),
             style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Urbanist',
@@ -93,13 +95,7 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
                       safeSetState(() => _model.isDataUploading = true);
                       var selectedUploadedFiles = <FFUploadedFile>[];
 
-                      var downloadUrls = <String>[];
                       try {
-                        showUploadMessage(
-                          context,
-                          'Uploading file...',
-                          showLoading: true,
-                        );
                         selectedUploadedFiles = selectedMedia
                             .map((m) => FFUploadedFile(
                                   name: m.storagePath.split('/').last,
@@ -109,35 +105,37 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
                                   blurHash: m.blurHash,
                                 ))
                             .toList();
-
-                        downloadUrls = (await Future.wait(
-                          selectedMedia.map(
-                            (m) async =>
-                                await uploadData(m.storagePath, m.bytes),
-                          ),
-                        ))
-                            .where((u) => u != null)
-                            .map((u) => u!)
-                            .toList();
                       } finally {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         _model.isDataUploading = false;
                       }
                       if (selectedUploadedFiles.length ==
-                              selectedMedia.length &&
-                          downloadUrls.length == selectedMedia.length) {
+                          selectedMedia.length) {
                         safeSetState(() {
                           _model.uploadedLocalFile =
                               selectedUploadedFiles.first;
-                          _model.uploadedFileUrl = downloadUrls.first;
                         });
-                        showUploadMessage(context, 'Success!');
                       } else {
                         safeSetState(() {});
-                        showUploadMessage(context, 'Failed to upload data');
                         return;
                       }
                     }
+
+                    _model.apiResultw9y = await HuggingAPICall.call(
+                      prompt:
+                          'Analyze the image and identify if there is any disease in the given plant. If there is a disease, suggest cure for it.',
+                    );
+
+                    if ((_model.apiResultw9y?.succeeded ?? true)) {
+                      _model.apiResponse = valueOrDefault<String>(
+                        HuggingAPICall.textResponse(
+                          (_model.apiResultw9y?.jsonBody ?? ''),
+                        ),
+                        '✨ Upload your image ✨',
+                      );
+                      safeSetState(() {});
+                    }
+
+                    safeSetState(() {});
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
@@ -154,7 +152,7 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
                 child: Builder(
                   builder: (context) {
-                    if (_model.uploadedFileUrl == '') {
+                    if ((_model.uploadedLocalFile.bytes?.isEmpty ?? true)) {
                       return Padding(
                         padding:
                             const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
@@ -171,8 +169,9 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
                     } else {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          _model.uploadedFileUrl,
+                        child: Image.memory(
+                          _model.uploadedLocalFile.bytes ??
+                              Uint8List.fromList([]),
                           width: 200.0,
                           height: 200.0,
                           fit: BoxFit.cover,
@@ -185,8 +184,9 @@ class _PestPredictionWidgetState extends State<PestPredictionWidget> {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
                 child: Text(
-                  FFLocalizations.of(context).getText(
-                    '7bn6uor0' /* Hello World */,
+                  valueOrDefault<String>(
+                    _model.apiResponse,
+                    '✨ Upload your image ✨',
                   ),
                   style: FlutterFlowTheme.of(context).bodyLarge.override(
                         fontFamily: 'Montserrat',

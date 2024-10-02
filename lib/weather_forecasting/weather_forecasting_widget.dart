@@ -55,25 +55,11 @@ class _WeatherForecastingWidgetState extends State<WeatherForecastingWidget> {
           centerTitle: false,
           elevation: 2.0,
         ),
-        body: SafeArea(
+        body: const SafeArea(
           top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 0.0),
-                child: Text(
-                  FFLocalizations.of(context).getText(
-                    '1vx4foic' /* Machine learning can enhance w... */,
-                  ),
-                  style: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 20.0,
-                        letterSpacing: 0.0,
-                      ),
-                ),
-              ),
-            ],
+            children: [],
           ),
         ),
       ),

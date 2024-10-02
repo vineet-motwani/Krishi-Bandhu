@@ -103,111 +103,114 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(2.0),
-                          child: StreamBuilder<UsersRecord>(
-                            stream:
-                                UsersRecord.getDocument(currentUserReference!),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        FlutterFlowTheme.of(context).primary,
+                          child: AuthUserStreamWidget(
+                            builder: (context) => StreamBuilder<UsersRecord>(
+                              stream: UsersRecord.getDocument(
+                                  currentUserReference!),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
                                       ),
+                                    ),
+                                  );
+                                }
+
+                                final userAvatarUsersRecord = snapshot.data!;
+
+                                return InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    final selectedMedia =
+                                        await selectMediaWithSourceBottomSheet(
+                                      context: context,
+                                      allowPhoto: true,
+                                    );
+                                    if (selectedMedia != null &&
+                                        selectedMedia.every((m) =>
+                                            validateFileFormat(
+                                                m.storagePath, context))) {
+                                      safeSetState(
+                                          () => _model.isDataUploading = true);
+                                      var selectedUploadedFiles =
+                                          <FFUploadedFile>[];
+
+                                      var downloadUrls = <String>[];
+                                      try {
+                                        selectedUploadedFiles = selectedMedia
+                                            .map((m) => FFUploadedFile(
+                                                  name: m.storagePath
+                                                      .split('/')
+                                                      .last,
+                                                  bytes: m.bytes,
+                                                  height: m.dimensions?.height,
+                                                  width: m.dimensions?.width,
+                                                  blurHash: m.blurHash,
+                                                ))
+                                            .toList();
+
+                                        downloadUrls = (await Future.wait(
+                                          selectedMedia.map(
+                                            (m) async => await uploadData(
+                                                m.storagePath, m.bytes),
+                                          ),
+                                        ))
+                                            .where((u) => u != null)
+                                            .map((u) => u!)
+                                            .toList();
+                                      } finally {
+                                        _model.isDataUploading = false;
+                                      }
+                                      if (selectedUploadedFiles.length ==
+                                              selectedMedia.length &&
+                                          downloadUrls.length ==
+                                              selectedMedia.length) {
+                                        safeSetState(() {
+                                          _model.uploadedLocalFile =
+                                              selectedUploadedFiles.first;
+                                          _model.uploadedFileUrl =
+                                              downloadUrls.first;
+                                        });
+                                      } else {
+                                        safeSetState(() {});
+                                        return;
+                                      }
+                                    }
+
+                                    await currentUserReference!
+                                        .update(createUsersRecordData(
+                                      photoUrl: currentUserPhoto,
+                                    ));
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: CachedNetworkImage(
+                                      fadeInDuration:
+                                          const Duration(milliseconds: 3000),
+                                      fadeOutDuration:
+                                          const Duration(milliseconds: 3000),
+                                      imageUrl: currentUserPhoto != ''
+                                          ? userAvatarUsersRecord.photoUrl
+                                          : 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png',
+                                      width: 80.0,
+                                      height: 80.0,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 );
-                              }
-
-                              final userAvatarUsersRecord = snapshot.data!;
-
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  final selectedMedia =
-                                      await selectMediaWithSourceBottomSheet(
-                                    context: context,
-                                    allowPhoto: true,
-                                  );
-                                  if (selectedMedia != null &&
-                                      selectedMedia.every((m) =>
-                                          validateFileFormat(
-                                              m.storagePath, context))) {
-                                    safeSetState(
-                                        () => _model.isDataUploading = true);
-                                    var selectedUploadedFiles =
-                                        <FFUploadedFile>[];
-
-                                    var downloadUrls = <String>[];
-                                    try {
-                                      selectedUploadedFiles = selectedMedia
-                                          .map((m) => FFUploadedFile(
-                                                name: m.storagePath
-                                                    .split('/')
-                                                    .last,
-                                                bytes: m.bytes,
-                                                height: m.dimensions?.height,
-                                                width: m.dimensions?.width,
-                                                blurHash: m.blurHash,
-                                              ))
-                                          .toList();
-
-                                      downloadUrls = (await Future.wait(
-                                        selectedMedia.map(
-                                          (m) async => await uploadData(
-                                              m.storagePath, m.bytes),
-                                        ),
-                                      ))
-                                          .where((u) => u != null)
-                                          .map((u) => u!)
-                                          .toList();
-                                    } finally {
-                                      _model.isDataUploading = false;
-                                    }
-                                    if (selectedUploadedFiles.length ==
-                                            selectedMedia.length &&
-                                        downloadUrls.length ==
-                                            selectedMedia.length) {
-                                      safeSetState(() {
-                                        _model.uploadedLocalFile =
-                                            selectedUploadedFiles.first;
-                                        _model.uploadedFileUrl =
-                                            downloadUrls.first;
-                                      });
-                                    } else {
-                                      safeSetState(() {});
-                                      return;
-                                    }
-                                  }
-
-                                  await currentUserReference!
-                                      .update(createUsersRecordData(
-                                    photoUrl: currentUserPhoto,
-                                  ));
-                                },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: CachedNetworkImage(
-                                    fadeInDuration:
-                                        const Duration(milliseconds: 3000),
-                                    fadeOutDuration:
-                                        const Duration(milliseconds: 3000),
-                                    imageUrl: userAvatarUsersRecord.photoUrl != ''
-                                        ? userAvatarUsersRecord.photoUrl
-                                        : 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-male-icon.png',
-                                    width: 80.0,
-                                    height: 80.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              );
-                            },
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -302,7 +305,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 3.0, 0.0, 3.0),
+                                  0.0, 5.0, 0.0, 5.0),
                               child: SizedBox(
                                 width: double.infinity,
                                 child: TextFormField(
@@ -310,8 +313,9 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                   focusNode: _model.phoneNumberFocusNode,
                                   autofocus: false,
                                   autofillHints: const [
-                                    AutofillHints.telephoneNumberNational
+                                    AutofillHints.telephoneNumber
                                   ],
+                                  textInputAction: TextInputAction.next,
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     labelText:
@@ -366,7 +370,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                         fontFamily: 'Plus Jakarta Sans',
                                         letterSpacing: 0.0,
                                       ),
-                                  maxLength: 30,
+                                  maxLength: 10,
                                   maxLengthEnforcement:
                                       MaxLengthEnforcement.enforced,
                                   buildCounter: (context,
@@ -378,6 +382,10 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                   validator: _model
                                       .phoneNumberTextControllerValidator
                                       .asValidator(context),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp('[0-9]'))
+                                  ],
                                 ),
                               ),
                             ),
@@ -458,7 +466,7 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                                         letterSpacing: 0.0,
                                       ),
                                   maxLines: 10,
-                                  maxLength: 10,
+                                  maxLength: 500,
                                   maxLengthEnforcement:
                                       MaxLengthEnforcement.enforced,
                                   buildCounter: (context,
@@ -505,10 +513,13 @@ class _EditProfilePageWidgetState extends State<EditProfilePageWidget> {
                       onPressed: () async {
                         await buttonUsersRecord.reference
                             .update(createUsersRecordData(
-                          phoneNumber: _model.descriptionTextController.text != ''
-                              ? _model.descriptionTextController.text
+                          phoneNumber: _model.phoneNumberTextController.text != ''
+                              ? _model.phoneNumberTextController.text
                               : currentPhoneNumber,
-                          description: _model.descriptionTextController.text,
+                          description: _model.descriptionTextController.text != ''
+                              ? _model.descriptionTextController.text
+                              : valueOrDefault(
+                                  currentUserDocument?.description, ''),
                         ));
                       },
                       text: FFLocalizations.of(context).getText(

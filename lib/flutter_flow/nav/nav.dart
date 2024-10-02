@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '/auth/base_auth_user_provider.dart';
 
 import '/index.dart';
+import '/main.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 
 export 'package:go_router/go_router.dart';
@@ -71,14 +72,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? const ServicesPageWidget() : const AuthPageWidget(),
+          appStateNotifier.loggedIn ? const NavBarPage() : const AuthPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => appStateNotifier.loggedIn
-              ? const ServicesPageWidget()
-              : const AuthPageWidget(),
+          builder: (context, _) =>
+              appStateNotifier.loggedIn ? const NavBarPage() : const AuthPageWidget(),
         ),
         FFRoute(
           name: 'AuthPage',
@@ -88,12 +88,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'ServicesPage',
           path: '/servicesPage',
-          builder: (context, params) => const ServicesPageWidget(),
+          builder: (context, params) => params.isEmpty
+              ? const NavBarPage(initialPage: 'ServicesPage')
+              : const ServicesPageWidget(),
         ),
         FFRoute(
           name: 'ProfilePage',
           path: '/profilePage',
-          builder: (context, params) => const ProfilePageWidget(),
+          builder: (context, params) => params.isEmpty
+              ? const NavBarPage(initialPage: 'ProfilePage')
+              : const ProfilePageWidget(),
         ),
         FFRoute(
           name: 'EditProfilePage',
@@ -111,14 +115,16 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => const SoilPredictionWidget(),
         ),
         FFRoute(
-          name: 'PestPrediction',
-          path: '/pestPrediction',
-          builder: (context, params) => const PestPredictionWidget(),
+          name: 'PlantDiseaseDetection',
+          path: '/plantDiseaseDetection',
+          builder: (context, params) => const PlantDiseaseDetectionWidget(),
         ),
         FFRoute(
           name: 'WeatherForecasting',
           path: '/weatherForecasting',
-          builder: (context, params) => const WeatherForecastingWidget(),
+          builder: (context, params) => params.isEmpty
+              ? const NavBarPage(initialPage: 'WeatherForecasting')
+              : const WeatherForecastingWidget(),
         ),
         FFRoute(
           name: 'WeedIdentification',

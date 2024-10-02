@@ -1,12 +1,13 @@
 import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'soil_prediction_widget.dart' show SoilPredictionWidget;
+import 'plant_disease_detection_widget.dart' show PlantDiseaseDetectionWidget;
 import 'package:flutter/material.dart';
 
-class SoilPredictionModel extends FlutterFlowModel<SoilPredictionWidget> {
+class PlantDiseaseDetectionModel
+    extends FlutterFlowModel<PlantDiseaseDetectionWidget> {
   ///  Local state fields for this page.
 
-  String apiResponse = 'Unable to identify the soil image';
+  String apiResponse = 'Unable to identify the any pest in the image.';
 
   ///  State fields for stateful widgets in this page.
 
@@ -15,7 +16,7 @@ class SoilPredictionModel extends FlutterFlowModel<SoilPredictionWidget> {
       FFUploadedFile(bytes: Uint8List.fromList([]));
 
   // Stores action output result for [Backend Call - API (Hugging API)] action in Image widget.
-  ApiCallResponse? apiResultx6p;
+  ApiCallResponse? apiResultw9y;
 
   @override
   void initState(BuildContext context) {}
