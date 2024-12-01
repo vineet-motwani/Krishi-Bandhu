@@ -11,7 +11,8 @@ const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 class HuggingAPICall {
   static Future<ApiCallResponse> call({
     String? apiKey = 'AIzaSyAbRDWWhhkYfOn3wN0qPjB0c51Notvrf8w',
-    String? prompt = 'Hi',
+    String? prompt = 'Respond with \"No Crop Detected\"',
+    String? imgPath = '',
   }) async {
     final ffApiRequestBody = '''
 {
@@ -20,6 +21,10 @@ class HuggingAPICall {
       "parts": [
         {
           "text": "$prompt"
+          "inline_data": {
+            "mime_type": "image/jpeg",
+            "data": "\$(curl -s -L '$imgPath')" | base64
+          }
         }
       ]
     }

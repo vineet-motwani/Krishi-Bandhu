@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 class CropPredictionModel extends FlutterFlowModel<CropPredictionWidget> {
   ///  Local state fields for this page.
 
-  String apiResponse = 'Unable to identify the crop in the image.';
+  String apiResponse = '✨ Upload your image ✨';
 
   ///  State fields for stateful widgets in this page.
 
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl = '';
 
   // Stores action output result for [Backend Call - API (Hugging API)] action in Image widget.
   ApiCallResponse? apiResultkwp;

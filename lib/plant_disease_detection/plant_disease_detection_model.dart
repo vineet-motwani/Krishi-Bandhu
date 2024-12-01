@@ -7,7 +7,7 @@ class PlantDiseaseDetectionModel
     extends FlutterFlowModel<PlantDiseaseDetectionWidget> {
   ///  Local state fields for this page.
 
-  String apiResponse = 'Unable to identify the any pest in the image.';
+  String apiResponse = '✨ Upload your image ✨';
 
   ///  State fields for stateful widgets in this page.
 

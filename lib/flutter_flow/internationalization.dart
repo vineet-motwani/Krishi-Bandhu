@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,18 +77,47 @@ class FFLocalizations {
   };
 }
 
+/// Used if the locale is not supported by GlobalMaterialLocalizations.
+class FallbackMaterialLocalizationDelegate
+    extends LocalizationsDelegate<MaterialLocalizations> {
+  const FallbackMaterialLocalizationDelegate();
+
+  @override
+  bool isSupported(Locale locale) => _isSupportedLocale(locale);
+
+  @override
+  Future<MaterialLocalizations> load(Locale locale) async =>
+      SynchronousFuture<MaterialLocalizations>(
+        const DefaultMaterialLocalizations(),
+      );
+
+  @override
+  bool shouldReload(FallbackMaterialLocalizationDelegate old) => false;
+}
+
+/// Used if the locale is not supported by GlobalCupertinoLocalizations.
+class FallbackCupertinoLocalizationDelegate
+    extends LocalizationsDelegate<CupertinoLocalizations> {
+  const FallbackCupertinoLocalizationDelegate();
+
+  @override
+  bool isSupported(Locale locale) => _isSupportedLocale(locale);
+
+  @override
+  Future<CupertinoLocalizations> load(Locale locale) =>
+      SynchronousFuture<CupertinoLocalizations>(
+        const DefaultCupertinoLocalizations(),
+      );
+
+  @override
+  bool shouldReload(FallbackCupertinoLocalizationDelegate old) => false;
+}
+
 class FFLocalizationsDelegate extends LocalizationsDelegate<FFLocalizations> {
   const FFLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) {
-    final language = locale.toString();
-    return FFLocalizations.languages().contains(
-      language.endsWith('_')
-          ? language.substring(0, language.length - 1)
-          : language,
-    );
-  }
+  bool isSupported(Locale locale) => _isSupportedLocale(locale);
 
   @override
   Future<FFLocalizations> load(Locale locale) =>
@@ -103,6 +133,15 @@ Locale createLocale(String language) => language.contains('_')
         scriptCode: language.split('_').last,
       )
     : Locale(language);
+
+bool _isSupportedLocale(Locale locale) {
+  final language = locale.toString();
+  return FFLocalizations.languages().contains(
+    language.endsWith('_')
+        ? language.substring(0, language.length - 1)
+        : language,
+  );
+}
 
 final kTranslationsMap = <Map<String, Map<String, String>>>[
   // AuthPage
@@ -260,7 +299,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   // CropPrediction
   {
     '8aw1kyzl': {
-      'en': 'Crop Prediction',
+      'en': 'Yield Prediction',
       'hi': '',
     },
     '99dx22uv': {
@@ -268,7 +307,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
           'Here, we analyze historical weather data, soil conditions, and crop performance to predict the yield of different crops. \n\nFor example, convolutional neural networks (CNNs) can be used to analyze satellite images and predict crop health and yield.',
       'hi': '',
     },
-    '2uaeivee': {
+    'go7b271b': {
       'en': 'Home',
       'hi': '',
     },
@@ -307,11 +346,39 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // WeatherForecasting
   {
-    '6209huy3': {
-      'en': 'Weather Forecast',
+    'cznknakg': {
+      'en': 'Weather',
       'hi': '',
     },
-    '5v4c1x4d': {
+    'p8b4p66t': {
+      'en': 'Today',
+      'hi': '',
+    },
+    '8isjuo3p': {
+      'en': 'Raipur, India',
+      'hi': '',
+    },
+    'lhhhebkn': {
+      'en': '16km',
+      'hi': '',
+    },
+    '8h2dm1gw': {
+      'en': '30',
+      'hi': '',
+    },
+    's1cptyvf': {
+      'en': '0',
+      'hi': '',
+    },
+    '7ykvj7z3': {
+      'en': 'Feels like 34',
+      'hi': '',
+    },
+    '8woip6sf': {
+      'en': '65%',
+      'hi': '',
+    },
+    'q8p6pim9': {
       'en': 'Weather',
       'hi': '',
     },

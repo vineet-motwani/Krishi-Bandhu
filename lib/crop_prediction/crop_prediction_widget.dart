@@ -1,4 +1,5 @@
 import '/backend/api_requests/api_calls.dart';
+import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/upload_data.dart';
@@ -45,7 +46,7 @@ class _CropPredictionWidgetState extends State<CropPredictionWidget> {
           automaticallyImplyLeading: false,
           title: Text(
             FFLocalizations.of(context).getText(
-              '8aw1kyzl' /* Crop Prediction */,
+              '8aw1kyzl' /* Yield Prediction */,
             ),
             style: FlutterFlowTheme.of(context).headlineLarge.override(
                   fontFamily: 'Urbanist',
@@ -58,141 +59,165 @@ class _CropPredictionWidgetState extends State<CropPredictionWidget> {
         ),
         body: SafeArea(
           top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 0.0),
-                child: Text(
-                  FFLocalizations.of(context).getText(
-                    '99dx22uv' /* Here, we analyze historical we... */,
-                  ),
-                  style: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 20.0,
-                        letterSpacing: 0.0,
-                      ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 35.0, 0.0, 0.0),
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () async {
-                    final selectedMedia =
-                        await selectMediaWithSourceBottomSheet(
-                      context: context,
-                      allowPhoto: true,
-                    );
-                    if (selectedMedia != null &&
-                        selectedMedia.every((m) =>
-                            validateFileFormat(m.storagePath, context))) {
-                      safeSetState(() => _model.isDataUploading = true);
-                      var selectedUploadedFiles = <FFUploadedFile>[];
-
-                      try {
-                        selectedUploadedFiles = selectedMedia
-                            .map((m) => FFUploadedFile(
-                                  name: m.storagePath.split('/').last,
-                                  bytes: m.bytes,
-                                  height: m.dimensions?.height,
-                                  width: m.dimensions?.width,
-                                  blurHash: m.blurHash,
-                                ))
-                            .toList();
-                      } finally {
-                        _model.isDataUploading = false;
-                      }
-                      if (selectedUploadedFiles.length ==
-                          selectedMedia.length) {
-                        safeSetState(() {
-                          _model.uploadedLocalFile =
-                              selectedUploadedFiles.first;
-                        });
-                      } else {
-                        safeSetState(() {});
-                        return;
-                      }
-                    }
-
-                    _model.apiResultkwp = await HuggingAPICall.call(
-                      prompt:
-                          'Analyze the image and identify if there is any crop. If there is any crop, identify the crop and estimate it\'s yield. Also suggest tips on how to increase the yield.',
-                    );
-
-                    if ((_model.apiResultkwp?.succeeded ?? true)) {
-                      _model.apiResponse = valueOrDefault<String>(
-                        HuggingAPICall.textResponse(
-                          (_model.apiResultkwp?.jsonBody ?? ''),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 0.0),
+                  child: Text(
+                    FFLocalizations.of(context).getText(
+                      '99dx22uv' /* Here, we analyze historical we... */,
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyLarge.override(
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontSize: 20.0,
+                          letterSpacing: 0.0,
                         ),
-                        '✨ Upload your image ✨',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 35.0, 0.0, 0.0),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      final selectedMedia =
+                          await selectMediaWithSourceBottomSheet(
+                        context: context,
+                        allowPhoto: true,
                       );
-                      safeSetState(() {});
-                    }
+                      if (selectedMedia != null &&
+                          selectedMedia.every((m) =>
+                              validateFileFormat(m.storagePath, context))) {
+                        safeSetState(() => _model.isDataUploading = true);
+                        var selectedUploadedFiles = <FFUploadedFile>[];
 
-                    safeSetState(() {});
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      'assets/images/Screenshot_from_2024-09-18_11-55-52.png',
-                      width: 136.0,
-                      height: 108.0,
-                      fit: BoxFit.cover,
+                        var downloadUrls = <String>[];
+                        try {
+                          showUploadMessage(
+                            context,
+                            'Uploading file...',
+                            showLoading: true,
+                          );
+                          selectedUploadedFiles = selectedMedia
+                              .map((m) => FFUploadedFile(
+                                    name: m.storagePath.split('/').last,
+                                    bytes: m.bytes,
+                                    height: m.dimensions?.height,
+                                    width: m.dimensions?.width,
+                                    blurHash: m.blurHash,
+                                  ))
+                              .toList();
+
+                          downloadUrls = (await Future.wait(
+                            selectedMedia.map(
+                              (m) async =>
+                                  await uploadData(m.storagePath, m.bytes),
+                            ),
+                          ))
+                              .where((u) => u != null)
+                              .map((u) => u!)
+                              .toList();
+                        } finally {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          _model.isDataUploading = false;
+                        }
+                        if (selectedUploadedFiles.length ==
+                                selectedMedia.length &&
+                            downloadUrls.length == selectedMedia.length) {
+                          safeSetState(() {
+                            _model.uploadedLocalFile =
+                                selectedUploadedFiles.first;
+                            _model.uploadedFileUrl = downloadUrls.first;
+                          });
+                          showUploadMessage(context, 'Success!');
+                        } else {
+                          safeSetState(() {});
+                          showUploadMessage(context, 'Failed to upload data');
+                          return;
+                        }
+                      }
+
+                      _model.apiResultkwp = await HuggingAPICall.call(
+                        prompt:
+                            'Analyze the image and identify if there is any crop. If there is any crop, identify the crop and estimate it\'s yield. Also suggest tips on how to increase the yield.',
+                      );
+
+                      if ((_model.apiResultkwp?.succeeded ?? true)) {
+                        _model.apiResponse = valueOrDefault<String>(
+                          HuggingAPICall.textResponse(
+                            (_model.apiResultkwp?.jsonBody ?? ''),
+                          ),
+                          '✨ Upload your image ✨',
+                        );
+                        safeSetState(() {});
+                      }
+
+                      safeSetState(() {});
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                        'assets/images/Screenshot_from_2024-09-18_11-55-52.png',
+                        width: 136.0,
+                        height: 108.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                child: Builder(
-                  builder: (context) {
-                    if ((_model.uploadedLocalFile.bytes?.isEmpty ?? true)) {
-                      return Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                        child: ClipRRect(
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                  child: Builder(
+                    builder: (context) {
+                      if (_model.isDataUploading) {
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 15.0, 0.0, 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.asset(
+                              'assets/images/preview.png',
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            'assets/images/preview.png',
+                          child: Image.network(
+                            _model.uploadedFileUrl,
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,
                           ),
-                        ),
-                      );
-                    } else {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.memory(
-                          _model.uploadedLocalFile.bytes ??
-                              Uint8List.fromList([]),
-                          width: 200.0,
-                          height: 200.0,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                child: Text(
-                  valueOrDefault<String>(
-                    _model.apiResponse,
-                    '✨ Upload your image ✨',
+                        );
+                      }
+                    },
                   ),
-                  style: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Montserrat',
-                        letterSpacing: 0.0,
-                      ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(15.0, 20.0, 15.0, 10.0),
+                  child: Text(
+                    valueOrDefault<String>(
+                      _model.apiResponse,
+                      '✨ Upload your image ✨',
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyLarge.override(
+                          fontFamily: 'Montserrat',
+                          letterSpacing: 0.0,
+                        ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

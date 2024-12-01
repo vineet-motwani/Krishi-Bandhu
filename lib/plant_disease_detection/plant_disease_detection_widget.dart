@@ -60,141 +60,145 @@ class _PlantDiseaseDetectionWidgetState
         ),
         body: SafeArea(
           top: true,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 0.0),
-                child: Text(
-                  FFLocalizations.of(context).getText(
-                    '2569s6te' /* ML models, especially those us... */,
-                  ),
-                  style: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 20.0,
-                        letterSpacing: 0.0,
-                      ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 35.0, 0.0, 0.0),
-                child: InkWell(
-                  splashColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () async {
-                    final selectedMedia =
-                        await selectMediaWithSourceBottomSheet(
-                      context: context,
-                      allowPhoto: true,
-                    );
-                    if (selectedMedia != null &&
-                        selectedMedia.every((m) =>
-                            validateFileFormat(m.storagePath, context))) {
-                      safeSetState(() => _model.isDataUploading = true);
-                      var selectedUploadedFiles = <FFUploadedFile>[];
-
-                      try {
-                        selectedUploadedFiles = selectedMedia
-                            .map((m) => FFUploadedFile(
-                                  name: m.storagePath.split('/').last,
-                                  bytes: m.bytes,
-                                  height: m.dimensions?.height,
-                                  width: m.dimensions?.width,
-                                  blurHash: m.blurHash,
-                                ))
-                            .toList();
-                      } finally {
-                        _model.isDataUploading = false;
-                      }
-                      if (selectedUploadedFiles.length ==
-                          selectedMedia.length) {
-                        safeSetState(() {
-                          _model.uploadedLocalFile =
-                              selectedUploadedFiles.first;
-                        });
-                      } else {
-                        safeSetState(() {});
-                        return;
-                      }
-                    }
-
-                    _model.apiResultw9y = await HuggingAPICall.call(
-                      prompt:
-                          'Analyze the image and identify if there is any disease in the given plant. If there is a disease, suggest cure for it.',
-                    );
-
-                    if ((_model.apiResultw9y?.succeeded ?? true)) {
-                      _model.apiResponse = valueOrDefault<String>(
-                        HuggingAPICall.textResponse(
-                          (_model.apiResultw9y?.jsonBody ?? ''),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(10.0, 20.0, 10.0, 0.0),
+                  child: Text(
+                    FFLocalizations.of(context).getText(
+                      '2569s6te' /* ML models, especially those us... */,
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyLarge.override(
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontSize: 20.0,
+                          letterSpacing: 0.0,
                         ),
-                        '✨ Upload your image ✨',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 35.0, 0.0, 0.0),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () async {
+                      final selectedMedia =
+                          await selectMediaWithSourceBottomSheet(
+                        context: context,
+                        allowPhoto: true,
                       );
-                      safeSetState(() {});
-                    }
+                      if (selectedMedia != null &&
+                          selectedMedia.every((m) =>
+                              validateFileFormat(m.storagePath, context))) {
+                        safeSetState(() => _model.isDataUploading = true);
+                        var selectedUploadedFiles = <FFUploadedFile>[];
 
-                    safeSetState(() {});
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      'assets/images/Screenshot_from_2024-09-18_11-55-52.png',
-                      width: 136.0,
-                      height: 108.0,
-                      fit: BoxFit.cover,
+                        try {
+                          selectedUploadedFiles = selectedMedia
+                              .map((m) => FFUploadedFile(
+                                    name: m.storagePath.split('/').last,
+                                    bytes: m.bytes,
+                                    height: m.dimensions?.height,
+                                    width: m.dimensions?.width,
+                                    blurHash: m.blurHash,
+                                  ))
+                              .toList();
+                        } finally {
+                          _model.isDataUploading = false;
+                        }
+                        if (selectedUploadedFiles.length ==
+                            selectedMedia.length) {
+                          safeSetState(() {
+                            _model.uploadedLocalFile =
+                                selectedUploadedFiles.first;
+                          });
+                        } else {
+                          safeSetState(() {});
+                          return;
+                        }
+                      }
+
+                      _model.apiResultw9y = await HuggingAPICall.call(
+                        prompt:
+                            'Analyze the image and identify if there is any disease in the given plant. If there is a disease, suggest cure for it.',
+                      );
+
+                      if ((_model.apiResultw9y?.succeeded ?? true)) {
+                        _model.apiResponse = valueOrDefault<String>(
+                          HuggingAPICall.textResponse(
+                            (_model.apiResultw9y?.jsonBody ?? ''),
+                          ),
+                          '✨ Upload your image ✨',
+                        );
+                        safeSetState(() {});
+                      }
+
+                      safeSetState(() {});
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                        'assets/images/Screenshot_from_2024-09-18_11-55-52.png',
+                        width: 136.0,
+                        height: 108.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                child: Builder(
-                  builder: (context) {
-                    if ((_model.uploadedLocalFile.bytes?.isEmpty ?? true)) {
-                      return Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
-                        child: ClipRRect(
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
+                  child: Builder(
+                    builder: (context) {
+                      if ((_model.uploadedLocalFile.bytes?.isEmpty ?? true)) {
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 15.0, 0.0, 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.asset(
+                              'assets/images/preview.png',
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      } else {
+                        return ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            'assets/images/preview.png',
+                          child: Image.memory(
+                            _model.uploadedLocalFile.bytes ??
+                                Uint8List.fromList([]),
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,
                           ),
-                        ),
-                      );
-                    } else {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.memory(
-                          _model.uploadedLocalFile.bytes ??
-                              Uint8List.fromList([]),
-                          width: 200.0,
-                          height: 200.0,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                child: Text(
-                  valueOrDefault<String>(
-                    _model.apiResponse,
-                    '✨ Upload your image ✨',
+                        );
+                      }
+                    },
                   ),
-                  style: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Montserrat',
-                        letterSpacing: 0.0,
-                      ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(15.0, 20.0, 15.0, 10.0),
+                  child: Text(
+                    valueOrDefault<String>(
+                      _model.apiResponse,
+                      '✨ Upload your image ✨',
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyLarge.override(
+                          fontFamily: 'Montserrat',
+                          letterSpacing: 0.0,
+                        ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
