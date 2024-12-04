@@ -21,15 +21,18 @@ class HuggingAPICall {
       "parts": [
         {
           "text": "$prompt"
+        },
+        {
           "inline_data": {
             "mime_type": "image/jpeg",
-            "data": "\$(curl -s -L '$imgPath')" | base64
+            "data": "\$(curl -s -L $imgPath | base64)"
           }
         }
       ]
     }
   ]
-}''';
+}
+''';
     return ApiManager.instance.makeApiCall(
       callName: 'Hugging API',
       apiUrl:
@@ -55,30 +58,6 @@ class HuggingAPICall {
         response,
         r'''$.candidates[:].content.parts[:].text''',
       ));
-}
-
-class UploadImageCall {
-  static Future<ApiCallResponse> call({
-    String? apiKey = 'AIzaSyAbRDWWhhkYfOn3wN0qPjB0c51Notvrf8w',
-  }) async {
-    return ApiManager.instance.makeApiCall(
-      callName: 'Upload Image',
-      apiUrl:
-          'https://generativelanguage.googleapis.com/upload/v1beta/files?uploadType=media&key=API_KEY',
-      callType: ApiCallType.POST,
-      headers: {
-        'Content-Type': 'image/jpeg',
-      },
-      params: {},
-      bodyType: BodyType.JSON,
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-      isStreamingApi: false,
-      alwaysAllowBody: false,
-    );
-  }
 }
 
 class ApiPagingParams {

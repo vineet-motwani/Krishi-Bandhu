@@ -1,3 +1,4 @@
+import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
@@ -81,8 +82,8 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 35.0, 0.0, 0.0),
-                  child: StreamBuilder<List<PhotosRecord>>(
-                    stream: queryPhotosRecord(
+                  child: StreamBuilder<List<UsersRecord>>(
+                    stream: queryUsersRecord(
                       singleRecord: true,
                     ),
                     builder: (context, snapshot) {
@@ -100,13 +101,13 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                           ),
                         );
                       }
-                      List<PhotosRecord> imagePhotosRecordList = snapshot.data!;
+                      List<UsersRecord> imageUsersRecordList = snapshot.data!;
                       // Return an empty Container when the item does not exist.
                       if (snapshot.data!.isEmpty) {
                         return Container();
                       }
-                      final imagePhotosRecord = imagePhotosRecordList.isNotEmpty
-                          ? imagePhotosRecordList.first
+                      final imageUsersRecord = imageUsersRecordList.isNotEmpty
+                          ? imageUsersRecordList.first
                           : null;
 
                       return InkWell(
@@ -164,17 +165,12 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                             }
                           }
 
-                          await PhotosRecord.collection
-                              .doc()
-                              .set(createPhotosRecordData(
-                                image: _model.uploadedFileUrl,
-                              ));
-                          _model.imageURL = await PhotosRecord.getDocumentOnce(
-                              imagePhotosRecord!.reference);
+                          _model.uploadedImage = _model.uploadedFileUrl;
+                          safeSetState(() {});
                           _model.apiResult9w4 = await HuggingAPICall.call(
                             prompt:
                                 'Identify if there is any weed in the crop image. If there is weed, suggest remedies for it.',
-                            imgPath: imagePhotosRecord.reference.id,
+                            imgPath: _model.uploadedImage,
                           );
 
                           if ((_model.apiResult9w4?.succeeded ?? true)) {
@@ -206,7 +202,7 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
                   child: Builder(
                     builder: (context) {
-                      if (_model.isDataUploading) {
+                      if (currentUserPhoto == '') {
                         return Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 15.0, 0.0, 0.0),
@@ -221,46 +217,20 @@ class _WeedIdentificationWidgetState extends State<WeedIdentificationWidget> {
                           ),
                         );
                       } else {
-                        return StreamBuilder<List<PhotosRecord>>(
-                          stream: queryPhotosRecord(
-                            singleRecord: true,
-                          ),
-                          builder: (context, snapshot) {
-                            // Customize what your widget looks like when it's loading.
-                            if (!snapshot.hasData) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      FlutterFlowTheme.of(context).primary,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-                            List<PhotosRecord> imagePhotosRecordList =
-                                snapshot.data!;
-                            // Return an empty Container when the item does not exist.
-                            if (snapshot.data!.isEmpty) {
-                              return Container();
-                            }
-                            final imagePhotosRecord =
-                                imagePhotosRecordList.isNotEmpty
-                                    ? imagePhotosRecordList.first
-                                    : null;
-
-                            return ClipRRect(
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 15.0, 0.0, 0.0),
+                          child: AuthUserStreamWidget(
+                            builder: (context) => ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.network(
-                                imagePhotosRecord!.image,
+                                currentUserPhoto,
                                 width: 200.0,
                                 height: 200.0,
                                 fit: BoxFit.cover,
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         );
                       }
                     },
