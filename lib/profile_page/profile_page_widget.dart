@@ -406,8 +406,12 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget>
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                 child: FFButtonWidget(
-                  onPressed: () {
-                    print('Button pressed ...');
+                  onPressed: () async {
+                    GoRouter.of(context).prepareAuthEvent();
+                    await authManager.signOut();
+                    GoRouter.of(context).clearRedirectLocation();
+
+                    context.goNamedAuth('AuthPage', context.mounted);
                   },
                   text: FFLocalizations.of(context).getText(
                     '3ului008' /* Log Out */,

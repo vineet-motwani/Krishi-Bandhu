@@ -167,14 +167,18 @@ class _SoilPredictionWidgetState extends State<SoilPredictionWidget> {
                           ),
                         );
                       } else {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.memory(
-                            _model.uploadedLocalFile.bytes ??
-                                Uint8List.fromList([]),
-                            width: 200.0,
-                            height: 200.0,
-                            fit: BoxFit.cover,
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 15.0, 0.0, 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.memory(
+                              _model.uploadedLocalFile.bytes ??
+                                  Uint8List.fromList([]),
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         );
                       }

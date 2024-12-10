@@ -9,8 +9,6 @@ class WeedIdentificationModel
 
   String apiResponse = '✨ Upload your image ✨';
 
-  String? uploadedImage;
-
   ///  State fields for stateful widgets in this page.
 
   bool isDataUploading = false;
@@ -18,6 +16,8 @@ class WeedIdentificationModel
       FFUploadedFile(bytes: Uint8List.fromList([]));
   String uploadedFileUrl = '';
 
+  // Stores action output result for [Custom Action - getImageBase64] action in Image widget.
+  String? base64;
   // Stores action output result for [Backend Call - API (Hugging API)] action in Image widget.
   ApiCallResponse? apiResult9w4;
 
