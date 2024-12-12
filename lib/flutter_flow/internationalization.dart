@@ -229,10 +229,6 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
   },
   // ServicesPage
   {
-    'f377rwjq': {
-      'en': 'Yield Prediction',
-      'hi': '',
-    },
     '9oyu7o89': {
       'en': 'Plant Disease Detection',
       'hi': '',
@@ -363,7 +359,7 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'hi': '',
     },
     '8h2dm1gw': {
-      'en': '30',
+      'en': '19',
       'hi': '',
     },
     's1cptyvf': {
@@ -371,11 +367,11 @@ final kTranslationsMap = <Map<String, Map<String, String>>>[
       'hi': '',
     },
     '7ykvj7z3': {
-      'en': 'Feels like 34',
+      'en': 'Feels like 17',
       'hi': '',
     },
     '8woip6sf': {
-      'en': '65%',
+      'en': '35%',
       'hi': '',
     },
     'q8p6pim9': {

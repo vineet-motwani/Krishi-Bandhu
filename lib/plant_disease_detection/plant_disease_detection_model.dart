@@ -14,7 +14,10 @@ class PlantDiseaseDetectionModel
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl = '';
 
+  // Stores action output result for [Custom Action - getImageBase64] action in Image widget.
+  String? base64;
   // Stores action output result for [Backend Call - API (Hugging API)] action in Image widget.
   ApiCallResponse? apiResultw9y;
 

@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<String> getImageBase64(String url) async {
-  url = url + "?alt=media";
   http.Response response = await http.get(Uri.parse(url));
   String base64 = base64Encode(response.bodyBytes);
   return base64;

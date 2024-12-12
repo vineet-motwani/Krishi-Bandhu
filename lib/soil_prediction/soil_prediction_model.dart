@@ -13,7 +13,10 @@ class SoilPredictionModel extends FlutterFlowModel<SoilPredictionWidget> {
   bool isDataUploading = false;
   FFUploadedFile uploadedLocalFile =
       FFUploadedFile(bytes: Uint8List.fromList([]));
+  String uploadedFileUrl = '';
 
+  // Stores action output result for [Custom Action - getImageBase64] action in Image widget.
+  String? b64;
   // Stores action output result for [Backend Call - API (Hugging API)] action in Image widget.
   ApiCallResponse? apiResultx6p;
 

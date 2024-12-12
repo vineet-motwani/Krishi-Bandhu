@@ -36,7 +36,10 @@ class _WeatherForecastingWidgetState extends State<WeatherForecastingWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -185,7 +188,7 @@ class _WeatherForecastingWidgetState extends State<WeatherForecastingWidget> {
                             children: [
                               Text(
                                 FFLocalizations.of(context).getText(
-                                  '8h2dm1gw' /* 30 */,
+                                  '8h2dm1gw' /* 19 */,
                                 ),
                                 style: FlutterFlowTheme.of(context)
                                     .displayLarge
@@ -220,7 +223,7 @@ class _WeatherForecastingWidgetState extends State<WeatherForecastingWidget> {
                           ),
                           Text(
                             FFLocalizations.of(context).getText(
-                              '7ykvj7z3' /* Feels like 34 */,
+                              '7ykvj7z3' /* Feels like 17 */,
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -257,7 +260,7 @@ class _WeatherForecastingWidgetState extends State<WeatherForecastingWidget> {
                           ),
                           Text(
                             FFLocalizations.of(context).getText(
-                              '8woip6sf' /* 65% */,
+                              '8woip6sf' /* 35% */,
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .headlineMedium

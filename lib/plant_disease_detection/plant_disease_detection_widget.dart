@@ -1,7 +1,9 @@
 import '/backend/api_requests/api_calls.dart';
+import '/backend/firebase_storage/storage.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/upload_data.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'plant_disease_detection_model.dart';
 export 'plant_disease_detection_model.dart';
@@ -38,7 +40,10 @@ class _PlantDiseaseDetectionWidgetState
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -97,6 +102,7 @@ class _PlantDiseaseDetectionWidgetState
                         safeSetState(() => _model.isDataUploading = true);
                         var selectedUploadedFiles = <FFUploadedFile>[];
 
+                        var downloadUrls = <String>[];
                         try {
                           selectedUploadedFiles = selectedMedia
                               .map((m) => FFUploadedFile(
@@ -107,14 +113,26 @@ class _PlantDiseaseDetectionWidgetState
                                     blurHash: m.blurHash,
                                   ))
                               .toList();
+
+                          downloadUrls = (await Future.wait(
+                            selectedMedia.map(
+                              (m) async =>
+                                  await uploadData(m.storagePath, m.bytes),
+                            ),
+                          ))
+                              .where((u) => u != null)
+                              .map((u) => u!)
+                              .toList();
                         } finally {
                           _model.isDataUploading = false;
                         }
                         if (selectedUploadedFiles.length ==
-                            selectedMedia.length) {
+                                selectedMedia.length &&
+                            downloadUrls.length == selectedMedia.length) {
                           safeSetState(() {
                             _model.uploadedLocalFile =
                                 selectedUploadedFiles.first;
+                            _model.uploadedFileUrl = downloadUrls.first;
                           });
                         } else {
                           safeSetState(() {});
@@ -122,9 +140,13 @@ class _PlantDiseaseDetectionWidgetState
                         }
                       }
 
+                      _model.base64 = await actions.getImageBase64(
+                        _model.uploadedFileUrl,
+                      );
                       _model.apiResultw9y = await HuggingAPICall.call(
                         prompt:
                             'Analyze the image and identify if there is any disease in the given plant. If there is a disease, suggest cure for it.',
+                        imgPath: _model.base64,
                       );
 
                       if ((_model.apiResultw9y?.succeeded ?? true)) {
@@ -154,7 +176,7 @@ class _PlantDiseaseDetectionWidgetState
                   padding: const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 0.0),
                   child: Builder(
                     builder: (context) {
-                      if ((_model.uploadedLocalFile.bytes?.isEmpty ?? true)) {
+                      if (_model.uploadedFileUrl == '') {
                         return Padding(
                           padding: const EdgeInsetsDirectional.fromSTEB(
                               0.0, 15.0, 0.0, 0.0),
@@ -171,9 +193,8 @@ class _PlantDiseaseDetectionWidgetState
                       } else {
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.memory(
-                            _model.uploadedLocalFile.bytes ??
-                                Uint8List.fromList([]),
+                          child: Image.network(
+                            _model.uploadedFileUrl,
                             width: 200.0,
                             height: 200.0,
                             fit: BoxFit.cover,
