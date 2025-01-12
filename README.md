@@ -4,13 +4,10 @@ A new Flutter project.
 
 ## App UI
 
-![Screenshot_2025-01-12-13-50-13-15_794eb0226693e683ee652a7cf660cb24 (3)](https://github.com/user-attachments/assets/6a5b5d99-3499-439f-bbec-7e3e631547b3)
+![1](https://github.com/user-attachments/assets/ffe34412-a125-42a7-a212-7e71458ee77d)
 
 
-![Screenshot_2025-01-12-13-51-50-71_794eb0226693e683ee652a7cf660cb24](https://github.com/user-attachments/assets/5d3953be-0448-4c07-81a4-ac6265bf6faf)
+![2](https://github.com/user-attachments/assets/3ff48250-d100-46f5-a214-c7ae0491b2e0)
 
 
-![Screenshot_2025-01-12-13-51-44-56_794eb0226693e683ee652a7cf660cb24](https://github.com/user-attachments/assets/8c18863a-ee04-41b7-a73b-b4550d60f1af)
-
-
-![Screenshot_2025-01-12-13-50-28-37_794eb0226693e683ee652a7cf660cb24](https://github.com/user-attachments/assets/7577c604-cd42-4728-8a19-5526292cee7d)
+![3](https://github.com/user-attachments/assets/32f2efac-c4fd-43a6-a08d-c4a863a5c268)
