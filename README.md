@@ -4,8 +4,7 @@ A new Flutter project.
 
 ## App UI
 
-![Screenshot_2025-01-12-13-50-13-15_794eb0226693e683ee652a7cf660cb24 (1)](https://github.com/user-attachments/assets/cc864d7a-790d-4206-a462-c26f2f082ccd)
-
+![Screenshot_2025-01-12-13-50-13-15_794eb0226693e683ee652a7cf660cb24 (2)](https://github.com/user-attachments/assets/1154f191-a68c-43d8-b11b-c39333b7d79f)
 
 
 ![Screenshot_2025-01-12-13-51-50-71_794eb0226693e683ee652a7cf660cb24](https://github.com/user-attachments/assets/5d3953be-0448-4c07-81a4-ac6265bf6faf)
